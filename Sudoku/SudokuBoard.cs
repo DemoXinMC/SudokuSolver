@@ -59,6 +59,8 @@ namespace Sudoku
 
         public void SetCell(SudokuCell cmd)
         {
+            if (BoardState[cmd.Row, cmd.Column] == cmd.Value)
+                return;
             if(cmd.Row < 0 || cmd.Column < 0 || cmd.Row > Columns.Length - 1 || cmd.Column > Rows.Length - 1)
                 throw new ArgumentException($"[{cmd.Row},{cmd.Column}] is outside of the board.");
             if (BoardState[cmd.Row, cmd.Column] != 0 && BoardState[cmd.Row, cmd.Column] != cmd.Value)
