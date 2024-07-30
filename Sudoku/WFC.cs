@@ -88,6 +88,8 @@ namespace Sudoku
                     solvedCells = moves.Count;
                 }
                 totalMoves += solvedCells;
+                if(board.UnsolvedCells == 0)
+                    return totalMoves;
             }
             return totalMoves;
         }
