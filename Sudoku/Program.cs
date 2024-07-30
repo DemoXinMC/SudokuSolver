@@ -114,7 +114,9 @@ namespace Sudoku
                         var maxTurns = int.Parse(parsed[1]);
                         var maxOptions = int.Parse(parsed[2]);
                         Console.WriteLine($"Attempting to Solve within {maxTurns} turns anc cells with {maxOptions} or less options...");
-                        AttemptCollapseSolver(sudoku, maxTurns, maxOptions);
+                        var solution = AttemptCollapseSolver(sudoku, maxTurns, maxOptions);
+                        if(solution != null)
+                            sudoku = solution;
                         break;
                     case "RENDER":
                         RenderBoard(sudoku.GetBoardState());
@@ -186,18 +188,14 @@ namespace Sudoku
                     break;
                 }
 
-                if(cellsSolved == 0)
-                {
-                    Console.WriteLine("No branches have any moves.  How did this happen?");
-                    break;
-                }
-
                 Console.WriteLine($"\tTotal Turn Time: {branchCreationTime + dupeRemovalTime + solverTime}ms");
                 //Console.WriteLine($"\tTotal Turn Time: {branchCreationTime + solverTime}ms");
             }
 
             Console.WriteLine($"Branching Solver ran in {wfcTimer.ElapsedMilliseconds}ms.");
-            return wfc.GetSolution();
+            var res = wfc.GetSolution();
+            wfc.Free();
+            return res;
         }
 
         static void RenderBoard(uint[,] boardState)

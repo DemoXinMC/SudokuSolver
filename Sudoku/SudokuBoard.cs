@@ -6,7 +6,7 @@ using SudokuInt = uint;
 
 namespace Sudoku
 {
-    public class SudokuBoard
+    public class SudokuBoard : IEquatable<SudokuBoard>
     {
         protected SudokuInt[,] BoardState;
         public int BoardSize { get; protected set; }
@@ -59,15 +59,15 @@ namespace Sudoku
 
         public void SetCell(SudokuCell cmd)
         {
-            if(cmd.X < 0 || cmd.Y < 0 || cmd.X > Columns.Length - 1 || cmd.Y > Rows.Length - 1)
-                throw new ArgumentException($"[{cmd.X},{cmd.Y}] is outside of the board.");
-            if (BoardState[cmd.X, cmd.Y] != 0 && BoardState[cmd.X, cmd.Y] != cmd.Value)
-                throw new Exception($"[{cmd.X},{cmd.Y}] has already been filled.");
+            if(cmd.Row < 0 || cmd.Column < 0 || cmd.Row > Columns.Length - 1 || cmd.Column > Rows.Length - 1)
+                throw new ArgumentException($"[{cmd.Row},{cmd.Column}] is outside of the board.");
+            if (BoardState[cmd.Row, cmd.Column] != 0 && BoardState[cmd.Row, cmd.Column] != cmd.Value)
+                throw new Exception($"[{cmd.Row},{cmd.Column}] has already been filled.");
 
-            BoardState[cmd.X, cmd.Y] = cmd.Value;
-            Rows[cmd.X] |= cmd.Value;
-            Columns[cmd.Y] |= cmd.Value;
-            Squares[(int)cmd.X / BoardSize, (int)cmd.Y / BoardSize] |= cmd.Value;
+            BoardState[cmd.Row, cmd.Column] = cmd.Value;
+            Rows[cmd.Row] |= cmd.Value;
+            Columns[cmd.Column] |= cmd.Value;
+            Squares[(int)cmd.Row / BoardSize, (int)cmd.Column / BoardSize] |= cmd.Value;
             SolvedCells++;
         }
 
@@ -168,7 +168,7 @@ namespace Sudoku
 
             foreach (var solve in solved)
             {
-                if (BoardState[solve.X, solve.Y] == 0)
+                if (BoardState[solve.Row, solve.Column] == 0)
                     ret.Add(solve);
             }
 
@@ -207,33 +207,23 @@ namespace Sudoku
             return (int)(Rows[0] | Columns[0] | Squares[0,0]);
         }
 
-        public override bool Equals(object? obj)
+        public SudokuInt[,] GetBoardState() => (SudokuInt[,])BoardState.Clone();
+        public bool Equals(SudokuBoard? other)
         {
-            var other = obj as SudokuBoard;
-            if(other == null) return false;
+            if (other == null) return false;
 
-            for(int i = 0; i < Rows.Length; i++)
-            {
-                if (Rows[i] != other.Rows[i])
-                    return false;
-            }
-
-            for (int i = 0; i < Columns.Length; i++)
-            {
-                if (Columns[i] != other.Columns[i])
-                    return false;
-            }
-
+            if (!Rows.SequenceEqual(other.Rows)) return false;
+            if (!Columns.SequenceEqual(other.Columns)) return false;
             for (int i = 0; i < Squares.GetLength(0); i++)
             {
-                for(int j = 0; j < Squares.GetLength(1); j++)
+                for (int j = 0; j < Squares.GetLength(1); j++)
                 {
                     if (Squares[i, j] != other.Squares[i, j])
                         return false;
                 }
             }
 
-            for(int i = 0; i < BoardState.GetLength(0); i++)
+            for (int i = 0; i < BoardState.GetLength(0); i++)
             {
                 for (int j = 0; j < BoardState.GetLength(1); j++)
                 {
@@ -244,7 +234,5 @@ namespace Sudoku
 
             return true;
         }
-
-        public SudokuInt[,] GetBoardState() => (SudokuInt[,])BoardState.Clone();
     }
 }

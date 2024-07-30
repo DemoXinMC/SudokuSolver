@@ -4,8 +4,8 @@ namespace Sudoku
 {
     public class SudokuCell
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
         public SudokuInt Value { get; set; }
         public char Display
         {
@@ -19,23 +19,23 @@ namespace Sudoku
             }
         }
 
-        public SudokuCell(int x, int y, char display)
+        public SudokuCell(int row, int col, char display)
         {
-            X = x;
-            Y = y;
+            Row = row;
+            Column = col;
             Display = display;
         }
 
         public SudokuCell(int x, int y, SudokuInt value)
         {
-            X = x;
-            Y = y;
+            Row = x;
+            Column = y;
             Value = value;
         }
 
         public override string ToString()
         {
-            return $"[{X},{Y}] {Display}";
+            return $"[{Row},{Column}] {Display}";
         }
     }
 }

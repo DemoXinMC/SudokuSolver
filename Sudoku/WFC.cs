@@ -29,7 +29,7 @@ namespace Sudoku
                     {
                         var optionCount = BitOperations.PopCount(options[row, col]);
 
-                        if (optionCount <= maxEntropy)
+                        if (optionCount > 0 && optionCount <= maxEntropy)
                             validBranchCells.Add(new KeyValuePair<int, int>(row, col));
                     }
                 }
@@ -64,7 +64,7 @@ namespace Sudoku
 
                 for (int j = i; j < Branches.Count; j++)
                 {
-                    if (Branches[i].Equals(Branches[j]))
+                    if (Branches[i] == Branches[j])
                     {
                         dupes.Add(Branches[j]);
                     }
@@ -102,5 +102,7 @@ namespace Sudoku
 
             return null;
         }
+
+        public void Free() => Branches.Clear();
     }
 }
