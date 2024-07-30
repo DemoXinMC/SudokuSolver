@@ -212,17 +212,37 @@ namespace Sudoku
             var other = obj as SudokuBoard;
             if(other == null) return false;
 
-            if (
-                StructuralComparisons.Equals(Rows, other.Rows) &&
-                StructuralComparisons.Equals(Columns, other.Columns) &&
-                StructuralComparisons.Equals(Squares, other.Squares)
-                )
+            for(int i = 0; i < Rows.Length; i++)
             {
-                if(StructuralComparisons.Equals(BoardState, other.BoardState))
-                    return true;
+                if (Rows[i] != other.Rows[i])
+                    return false;
             }
 
-            return false;
+            for (int i = 0; i < Columns.Length; i++)
+            {
+                if (Columns[i] != other.Columns[i])
+                    return false;
+            }
+
+            for (int i = 0; i < Squares.GetLength(0); i++)
+            {
+                for(int j = 0; j < Squares.GetLength(1); j++)
+                {
+                    if (Squares[i, j] != other.Squares[i, j])
+                        return false;
+                }
+            }
+
+            for(int i = 0; i < BoardState.GetLength(0); i++)
+            {
+                for (int j = 0; j < BoardState.GetLength(1); j++)
+                {
+                    if (BoardState[i, j] != other.BoardState[i, j])
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public SudokuInt[,] GetBoardState() => (SudokuInt[,])BoardState.Clone();

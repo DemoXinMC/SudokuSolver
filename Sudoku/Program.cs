@@ -172,6 +172,7 @@ namespace Sudoku
                 Console.WriteLine($"\t{wfc.BranchCount} new Branches calculated in {branchCreationTime}ms");
                 timer.Restart();
                 var duplicateBranches = wfc.ClearDupes();
+                //var duplicateBranches = 0;
                 var dupeRemovalTime = timer.ElapsedMilliseconds;
                 Console.WriteLine($"\t{duplicateBranches} duplicates removed in {dupeRemovalTime}ms");
                 timer.Restart();
